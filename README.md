@@ -98,3 +98,6 @@ return [
 
 Once you install composer, and edit the config/db.php file, go to route/to/project and execute the migration to generate the table.
 finally you can get the products of MercadoLibre.
+
+yii migrate createDB
+
