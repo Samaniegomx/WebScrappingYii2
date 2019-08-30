@@ -8,4 +8,15 @@ class Producto extends \yii\db\ActiveRecord
     {
         return 'tblProductos';
     }
+
+    public $urlCategory; // defining virtual attribute
+
+    public function rules()
+    {
+        return [
+            // other rules ...
+            [['urlCategory'], 'safe'],
+        ];
+    }
+
 }
