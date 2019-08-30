@@ -93,12 +93,23 @@ class SiteController extends Controller
      */
     public function actionCategory()
     {
-        return $this->render('form');
+        $model = new Producto();
+
+        return $this->render('form', ['model' => $model]);
     }
 
     public function actionScrapping()
     {
-        $url = "https://computacion.mercadolibre.com.mx/accesorios/";
+
+        echo 'scrapping'.'<br>';
+
+        $url1 = Yii::$app->request->post('Producto');
+        
+        $url = $url1['urlCategory'];
+        // die;
+        // $url = "https://computacion.mercadolibre.com.mx/accesorios/";
+
+        // $url = $urlCategory;
 
         $client = new Client();
         $crawler = $client->request('GET', $url);
@@ -106,33 +117,18 @@ class SiteController extends Controller
         $products = $crawler->filter('li.results-item')->each(function ($product){
             
             $idProducto = $product->filter('div.rowItem')->attr('id');
-            
-            /* echo $productos->idProducto;
-            echo '<br>'; */
-
-            $title = $product->filter('span.main-title')->first()->text();
-            
+            $title = $product->filter('span.main-title')->first()->text();    
             $nombre = $title;
-            /* echo $productos->nombre;
-            echo '<br>'; */
-            // die;
             
             $price = $product->filter('span.price__fraction')->first();
             $precio = $price->text();
-
-           /*  echo $productos->precio;
-            echo '<br>'; */
             $link = $product->filter('h2.item__title a')->first();
             $prodDetail = new Client();
-            
-            // item-description__text
             $links = $link->attr('href');
+            
             $crawDetail = $prodDetail->request('GET', $links);
             $detail = $crawDetail->filter('.item-description__text')->first();
             $descripcion = $detail->text();
-            /* echo $productos->descripcion;
-            echo '<br>'; */
-            /* die; */
             $model = Producto::find()->where(['idProducto' => $idProducto])->one();
 
             if($model){
